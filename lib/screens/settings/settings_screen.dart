@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../services/auth_service.dart';
 import '../../routes.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -6,19 +7,21 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authService = AuthService();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Change Store (Option 1)
+        child: FilledButton(
+          onPressed: () async {
+            await authService.logout();
             Navigator.pushNamedAndRemoveUntil(
               context,
-              AppRoutes.storeCode,
-              (route) => false,
+              AppRoutes.login,
+              (_) => false,
             );
           },
-          child: const Text('Change Store'),
+          child: const Text('Logout'),
         ),
       ),
     );
