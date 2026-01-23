@@ -33,7 +33,7 @@ class CartScreen extends StatelessWidget {
               onPressed: () {},
               child: const Text('Checkout - \$5.99'),
             ),
-          ),
+          )
         ],
       ),
     );

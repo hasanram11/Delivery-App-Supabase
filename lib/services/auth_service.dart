@@ -40,6 +40,7 @@ class AuthService {
         .collection('users')
         .doc(userCredential.user!.uid)
         .get();
+
     return doc['role'];
   }
 

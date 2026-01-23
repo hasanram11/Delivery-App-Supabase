@@ -32,7 +32,10 @@ class AdminProductsScreen extends StatelessWidget {
                       Navigator.pushNamed(context, AppRoutes.addProduct);
                     },
                   ),
-                  IconButton(icon: const Icon(Icons.delete), onPressed: () {}),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {},
+                  ),
                 ],
               ),
             ),
