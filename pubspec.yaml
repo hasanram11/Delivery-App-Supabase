@@ -22,6 +22,7 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+
   flutter:
     sdk: flutter
 
@@ -29,11 +30,12 @@ dependencies:
   firebase_auth: ^4.17.8
   cloud_firestore: ^4.17.5
   firebase_storage: ^11.7.7
+  image_picker: ^1.0.7
 
   provider: ^6.1.5
   oktoast: ^3.4.0
   cupertino_icons: ^1.0.8
-
+  
 
 
 dev_dependencies:
