@@ -18,23 +18,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkAuth() async {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
-      return;
-    }
-
-    final doc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid)
-        .get();
-
-    if (doc['role'] == 'admin') {
-      Navigator.pushReplacementNamed(context, AppRoutes.adminHome);
-    } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.customerHome);
-    }
+    // For now, just navigate to login
+    await Future.delayed(const Duration(seconds: 2));
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
   @override

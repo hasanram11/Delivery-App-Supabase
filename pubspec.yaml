@@ -31,7 +31,7 @@ dependencies:
   firebase_storage: ^11.7.7
 
   provider: ^6.1.5
-  fluttertoast: ^8.2.4
+  oktoast: ^3.4.0
   cupertino_icons: ^1.0.8
 
 

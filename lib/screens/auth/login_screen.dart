@@ -15,15 +15,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordCtrl = TextEditingController();
 
   Future<void> _login() async {
-    final role = await _authService.login(
-      email: emailCtrl.text,
-      password: passwordCtrl.text,
-    );
-
-    if (role == 'admin') {
-      Navigator.pushReplacementNamed(context, AppRoutes.adminHome);
-    } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.customerHome);
+    try {
+      final role = await _authService.login(
+        email: emailCtrl.text,
+        password: passwordCtrl.text,
+      );
+      if (role == 'admin') {
+        Navigator.pushReplacementNamed(context, AppRoutes.adminHome);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.customerHome);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
     }
   }
 
@@ -34,7 +39,9 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
+            TextField(
+                controller: emailCtrl,
+                decoration: const InputDecoration(labelText: 'Email')),
             const SizedBox(height: 16),
             TextField(
               controller: passwordCtrl,
