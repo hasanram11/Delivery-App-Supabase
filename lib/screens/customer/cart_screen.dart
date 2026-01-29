@@ -1,38 +1,36 @@
+import 'package:delivery/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/cart_provider.dart';
+import '../../services/order_service.dart';
 
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
+  const CartScreen({super.key, required List<Product> cart});
 
   @override
   Widget build(BuildContext context) {
+    final cart = context.watch<CartProvider>();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Your Cart')),
+      appBar: AppBar(title: const Text('Cart')),
       body: Column(
         children: [
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.fastfood),
-                    title: const Text('Burger'),
-                    subtitle: const Text('Quantity: 1'),
-                    trailing: const Text('\$5.99'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              onPressed: () {},
-              child: const Text('Checkout - \$5.99'),
-            ),
+          ...cart.items.map((e) =>
+              ListTile(title: Text('${e.product.name} x${e.qty}'))),
+          Text('Total: \$${cart.total}'),
+          ElevatedButton(
+            child: const Text('Place Order'),
+            onPressed: () async {
+              await OrderService.createOrder(
+                'Customer',
+                '000000',
+                'Address',
+                cart.total,
+                cart.items,
+              );
+              cart.clear();
+              Navigator.pop(context);
+            },
           )
         ],
       ),

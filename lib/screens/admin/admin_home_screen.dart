@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../routes.dart';
+import '../../services/auth_service.dart';
 
-class AdminHomeScreen extends StatelessWidget {
-  const AdminHomeScreen({super.key});
+class AdminHome extends StatelessWidget {
+  const AdminHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,26 +11,12 @@ class AdminHomeScreen extends StatelessWidget {
         title: const Text('Admin Dashboard'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Navigator.pushNamed(context, AppRoutes.settings);
-            },
+            icon: const Icon(Icons.logout),
+            onPressed: () => AuthService().logout(),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Card(
-          child: ListTile(
-            leading: const Icon(Icons.inventory),
-            title: const Text('Manage Products'),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.adminProducts);
-            },
-          ),
-        ),
-      ),
+      body: const Center(child: Text('Admin Panel')),
     );
   }
 }

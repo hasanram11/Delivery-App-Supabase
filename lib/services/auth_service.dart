@@ -1,54 +1,38 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final _client = Supabase.instance.client;
 
-  // REGISTER
+  Future<void> login(String email, String password) async {
+    await _client.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+  }
+
   Future<void> register({
-    required String name,
     required String email,
     required String password,
     required String role,
   }) async {
-    final userCredential = await _auth.createUserWithEmailAndPassword(
+    final response = await _client.auth.signUp(
       email: email,
       password: password,
     );
 
-    await _db.collection('users').doc(userCredential.user!.uid).set({
-      'uid': userCredential.user!.uid,
-      'name': name,
+    final user = response.user;
+    if (user == null) {
+      throw Exception('Registration failed');
+    }
+
+    await _client.from('profiles').insert({
+      'id': user.id,
       'email': email,
       'role': role,
-      'createdAt': Timestamp.now(),
     });
   }
 
-  // LOGIN
-  Future<String> login({
-    required String email,
-    required String password,
-  }) async {
-    final userCredential = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-
-    final doc = await _db
-        .collection('users')
-        .doc(userCredential.user!.uid)
-        .get();
-
-    return doc['role'];
-  }
-
-  // LOGOUT
   Future<void> logout() async {
-    await _auth.signOut();
+    await _client.auth.signOut();
   }
-
-  // CURRENT USER
-  User? get currentUser => _auth.currentUser;
 }

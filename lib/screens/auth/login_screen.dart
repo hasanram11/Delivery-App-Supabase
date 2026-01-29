@@ -1,6 +1,8 @@
+import 'package:delivery/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
-import '../../routes.dart';
+import '../widgets/auth_text_field.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,51 +12,52 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _authService = AuthService();
   final emailCtrl = TextEditingController();
-  final passwordCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+  final auth = AuthService();
+  bool loading = false;
 
-  Future<void> _login() async {
+  Future<void> login() async {
+    setState(() => loading = true);
     try {
-      final role = await _authService.login(
-        email: emailCtrl.text,
-        password: passwordCtrl.text,
-      );
-      if (role == 'admin') {
-        Navigator.pushReplacementNamed(context, AppRoutes.adminHome);
-      } else {
-        Navigator.pushReplacementNamed(context, AppRoutes.customerHome);
-      }
+      await auth.login(emailCtrl.text, passCtrl.text);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login failed: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
+    setState(() => loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-                controller: emailCtrl,
-                decoration: const InputDecoration(labelText: 'Email')),
-            const SizedBox(height: 16),
-            TextField(
-              controller: passwordCtrl,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
+            AuthTextField(controller: emailCtrl, label: 'Email'),
+            const SizedBox(height: 12),
+            AuthTextField(
+              controller: passCtrl,
+              label: 'Password',
+              obscure: true,
             ),
-            const SizedBox(height: 24),
-            FilledButton(onPressed: _login, child: const Text('Login')),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: loading ? null : login,
+              child: const Text('Login'),
+            ),
             TextButton(
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.register);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const RegisterScreen(),
+                  ),
+                );
               },
-              child: const Text('Create account'),
+              child: const Text('Create Account'),
             ),
           ],
         ),

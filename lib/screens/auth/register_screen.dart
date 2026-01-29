@@ -1,5 +1,7 @@
+import 'package:delivery/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
+import '../widgets/auth_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -9,28 +11,26 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _authService = AuthService();
-  final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
-  final passwordCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+  final auth = AuthService();
+  String role = 'customer';
+  bool loading = false;
 
-  Future<void> _register() async {
+  Future<void> register() async {
+    setState(() => loading = true);
     try {
-      await _authService.register(
-        name: nameCtrl.text,
+      await auth.register(
         email: emailCtrl.text,
-        password: passwordCtrl.text,
-        role: 'customer', // Force customer role
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created! You can now login.')),
+        password: passCtrl.text,
+        role: role,
       );
       Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
     }
+    setState(() => loading = false);
   }
 
   @override
@@ -38,20 +38,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Register')),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Name')),
-            const SizedBox(height: 16),
-            TextField(controller: emailCtrl, decoration: const InputDecoration(labelText: 'Email')),
-            const SizedBox(height: 16),
-            TextField(
-              controller: passwordCtrl,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
+            AuthTextField(controller: emailCtrl, label: 'Email'),
+            const SizedBox(height: 12),
+            AuthTextField(
+              controller: passCtrl,
+              label: 'Password',
+              obscure: true,
             ),
-            const SizedBox(height: 24),
-            FilledButton(onPressed: _register, child: const Text('Create Account')),
+            const SizedBox(height: 12),
+            DropdownButtonFormField(
+              value: role,
+              items: const [
+                DropdownMenuItem(
+                  value: 'customer',
+                  child: Text('Customer'),
+                ),
+                DropdownMenuItem(
+                  value: 'admin',
+                  child: Text('Admin'),
+                ),
+              ],
+              onChanged: (value) => role = value!,
+              decoration: const InputDecoration(
+                labelText: 'Account Type',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: loading ? null : register,
+              child: const Text('Register'),
+            ),
           ],
         ),
       ),
