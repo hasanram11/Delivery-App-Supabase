@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               }
 
               return roleSnapshot.data == 'admin'
-                  ? const AdminHome()
+                  ? const AdminHomeScreen()
                   : const CustomerHomeScreen();
             },
           );

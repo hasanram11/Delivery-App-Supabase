@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 
-class AdminHome extends StatelessWidget {
-  const AdminHome({super.key});
+class AdminHomeScreen extends StatelessWidget {
+  const AdminHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +12,13 @@ class AdminHome extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => AuthService().logout(),
-          ),
+            onPressed: () async {
+              await AuthService().logout();
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, '/login');
+              }
+            },
+          )
         ],
       ),
       body: const Center(child: Text('Admin Panel')),

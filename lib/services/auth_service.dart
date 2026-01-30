@@ -1,38 +1,56 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final _client = Supabase.instance.client;
+  final _supabase = Supabase.instance.client;
 
-  Future<void> login(String email, String password) async {
-    await _client.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-  }
-
-  Future<void> register({
+  // CUSTOMER SIGNUP
+  Future<void> registerCustomer({
     required String email,
     required String password,
-    required String role,
   }) async {
-    final response = await _client.auth.signUp(
+    final res = await _supabase.auth.signUp(
       email: email,
       password: password,
     );
 
-    final user = response.user;
+    final user = res.user;
     if (user == null) {
-      throw Exception('Registration failed');
+      throw Exception('Signup failed');
     }
 
-    await _client.from('profiles').insert({
+    await _supabase.from('profiles').insert({
       'id': user.id,
       'email': email,
-      'role': role,
+      'role': 'customer',
     });
   }
 
+  // LOGIN
+  Future<void> login({
+    required String email,
+    required String password,
+  }) async {
+    await _supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  // GET ROLE
+  Future<String> getRole() async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) throw Exception('Not logged in');
+
+    final data = await _supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+    return data['role'];
+  }
+
   Future<void> logout() async {
-    await _client.auth.signOut();
+    await _supabase.auth.signOut();
   }
 }

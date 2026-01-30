@@ -1,30 +1,44 @@
-/* import 'package:flutter/material.dart';
-import '../../services/auth_service.dart';
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../routes.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
+  Future<void> _logout(BuildContext context) async {
+    await Supabase.instance.client.auth.signOut();
+
+    if (!context.mounted) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/login',
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authService = AuthService();
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: Center(
-        child: FilledButton(
-          onPressed: () async {
-            await authService.logout();
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              AppRoutes.login,
-              (_) => false,
-            );
-          },
-          child: const Text('Logout'),
-        ),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          const SizedBox(height: 16),
+
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text(
+              'Logout',
+              style: TextStyle(color: Colors.red),
+            ),
+            onTap: () => _logout(context),
+          ),
+        ],
       ),
     );
   }
-} 
-  */
+}

@@ -1,8 +1,5 @@
-import 'package:delivery/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
-import '../widgets/auth_text_field.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,19 +10,27 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final emailCtrl = TextEditingController();
-  final passCtrl = TextEditingController();
-  final auth = AuthService();
-  bool loading = false;
+  final passwordCtrl = TextEditingController();
 
   Future<void> login() async {
-    setState(() => loading = true);
     try {
-      await auth.login(emailCtrl.text, passCtrl.text);
+      await AuthService().login(
+        email: emailCtrl.text.trim(),
+        password: passwordCtrl.text,
+      );
+
+      final role = await AuthService().getRole();
+
+      if (!mounted) return;
+
+      Navigator.pushReplacementNamed(
+        context,
+        role == 'admin' ? '/admin-home' : '/customer-home',
+      );
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
     }
-    setState(() => loading = false);
   }
 
   @override
@@ -36,29 +41,27 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            AuthTextField(controller: emailCtrl, label: 'Email'),
-            const SizedBox(height: 12),
-            AuthTextField(
-              controller: passCtrl,
-              label: 'Password',
-              obscure: true,
+            TextField(
+              controller: emailCtrl,
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
+            TextField(
+              controller: passwordCtrl,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Password'),
+            ),
+            const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: loading ? null : login,
+              onPressed: login,
               child: const Text('Login'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const RegisterScreen(),
-                  ),
-                );
+                Navigator.pushNamed(context, '/register');
               },
-              child: const Text('Create Account'),
-            ),
+              child: const Text('Create Customer Account'),
+            )
           ],
         ),
       ),

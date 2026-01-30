@@ -1,7 +1,5 @@
-import 'package:delivery/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
-
 
 class CustomerHomeScreen extends StatelessWidget {
   const CustomerHomeScreen({super.key});
@@ -14,11 +12,16 @@ class CustomerHomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => AuthService().logout(),
-          ),
+            onPressed: () async {
+              await AuthService().logout();
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, '/login');
+              }
+            },
+          )
         ],
       ),
-      body: const Center(child: Text('Product List')),
+      body: const Center(child: Text('Customer Dashboard')),
     );
   }
 }

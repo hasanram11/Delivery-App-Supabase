@@ -44,13 +44,5 @@ flutter {
     source = "../.."
 }
 dependencies {
-  implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-
-
- 
-  implementation("com.google.firebase:firebase-analytics")
-
-
   
-  // https://firebase.google.com/docs/android/setup#available-libraries
 }

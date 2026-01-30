@@ -6,12 +6,12 @@ class ProfileService {
   Future<String> getUserRole() async {
     final userId = _client.auth.currentUser!.id;
 
-    final response = await _client
+    final data = await _client
         .from('profiles')
         .select('role')
         .eq('id', userId)
         .single();
 
-    return response['role'];
+    return data['role'];
   }
 }
