@@ -1,43 +1,38 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static ThemeData light() {
-    const primaryBlue = Color(0xFF1976D2); // Material Blue
 
-    return ThemeData(
-      useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        brightness: Brightness.light,
+  static ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
+
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: const Color(0xFFFF6B00),
+      brightness: Brightness.light,
+    ),
+
+    scaffoldBackgroundColor: const Color(0xFFF7F7F7),
+
+    appBarTheme: const AppBarTheme(
+      centerTitle: true,
+      elevation: 0,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+    ),
+
+    cardTheme: CardThemeData(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
       ),
-      scaffoldBackgroundColor: Colors.grey.shade50,
-      appBarTheme: const AppBarTheme(
-        centerTitle: true,
-        backgroundColor: primaryBlue,
-        foregroundColor: Colors.white,
-        elevation: 1,
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: primaryBlue,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          padding: const EdgeInsets.symmetric(
-            vertical: 14,
-            horizontal: 20,
-          ),
+    ),
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
-      inputDecorationTheme: InputDecorationTheme(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-      ),
-      
-    );
-  }
+    ),
+  );
 }

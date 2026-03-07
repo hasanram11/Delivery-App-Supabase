@@ -1,26 +1,78 @@
 import 'package:flutter/material.dart';
-import '../models/cart_item_model.dart';
 import '../models/product_model.dart';
 
+class CartItem {
+
+  final Product product;
+  int quantity;
+
+  CartItem({
+    required this.product,
+    this.quantity = 1,
+  });
+
+}
+
 class CartProvider extends ChangeNotifier {
-  final List<CartItem> items = [];
 
-  void add(Product product) {
+  final List<CartItem> _items = [];
+
+  List<CartItem> get items => _items;
+
+  void addToCart(Product product){
+
     final index =
-        items.indexWhere((e) => e.product.id == product.id);
-    if (index >= 0) {
-      items[index].qty++;
-    } else {
-      items.add(CartItem(product, 1));
+        _items.indexWhere((item) => item.product.id == product.id);
+
+    if(index >= 0){
+      _items[index].quantity++;
+    }else{
+      _items.add(CartItem(product: product));
     }
+
     notifyListeners();
   }
 
-  double get total =>
-      items.fold(0, (s, e) => s + e.product.price * e.qty);
+  void increaseQty(Product product){
 
-  void clear() {
-    items.clear();
+    final item =
+        _items.firstWhere((item) => item.product.id == product.id);
+
+    item.quantity++;
+
     notifyListeners();
   }
+
+  void decreaseQty(Product product){
+
+    final item =
+        _items.firstWhere((item) => item.product.id == product.id);
+
+    if(item.quantity > 1){
+      item.quantity--;
+    }else{
+      _items.remove(item);
+    }
+
+    notifyListeners();
+  }
+
+  void clearCart(){
+
+    _items.clear();
+
+    notifyListeners();
+  }
+
+  double get totalPrice {
+
+    double total = 0;
+
+    for(final item in _items){
+      total += item.product.price * item.quantity;
+    }
+
+    return total;
+  }
+
 }

@@ -1,4 +1,4 @@
-import 'package:delivery/models/product_model.dart';
+/* import 'package:delivery/models/product_model.dart';
 import 'package:delivery/providers/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,4 +20,4 @@ class ProductTile extends StatelessWidget {
       ),
     );
   }
-}
+} */

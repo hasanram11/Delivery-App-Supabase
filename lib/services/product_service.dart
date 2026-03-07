@@ -2,17 +2,32 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/product_model.dart';
 
 class ProductService {
-  final _client = Supabase.instance.client;
+
+  final supabase = Supabase.instance.client;
 
   Future<List<Product>> getProducts() async {
-    final data = await _client
+
+    final response = await supabase
         .from('products')
         .select()
-        .eq('is_available', true)
+        .eq('available', true)
         .order('name');
 
-    return (data as List)
-        .map((e) => Product.fromJson(e))
+    return (response as List)
+        .map((product) => Product.fromMap(product))
         .toList();
   }
+
+  Future<List<Product>> getAllProducts() async {
+
+    final response = await supabase
+        .from('products')
+        .select()
+        .order('name');
+
+    return (response as List)
+        .map((product) => Product.fromMap(product))
+        .toList();
+  }
+
 }
